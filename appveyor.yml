@@ -1,9 +1,13 @@
-#---------------------------------# 
-#      environment configuration  # 
-#---------------------------------# 
+#---------------------------------#
+#      environment configuration  #
+#---------------------------------#
 version: 1.0.{build}.0
 install:
-    - git clone https://github.com/PowerShell/DscResource.Tests
+    - git clone https://github.com/SSvilen/DscResource.Tests
+    - ps: Push-Location
+    - ps: cd "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests"
+    - git checkout KeywordsCheck
+    - ps: Pop-Location
     - ps: |
         $moduleName = 'SecurityPolicyDsc'
         Import-Module -Name "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"
@@ -11,26 +15,26 @@ install:
 
 #---------------------------------#
 #      build configuration        #
-#---------------------------------# 
+#---------------------------------#
 
 build: false
 
-#---------------------------------# 
-#      test configuration         # 
-#---------------------------------# 
+#---------------------------------#
+#      test configuration         #
+#---------------------------------#
 
 
 test_script:
     - ps: |
         Invoke-AppveyorTestScriptTask -Type 'Default' -CodeCoverage -CodeCovIo
 
-#---------------------------------# 
-#      deployment configuration   # 
-#---------------------------------# 
+#---------------------------------#
+#      deployment configuration   #
+#---------------------------------#
 
-# scripts to run before deployment 
+# scripts to run before deployment
 
-deploy_script: 
+deploy_script:
 
   - ps: |
         Invoke-AppveyorAfterTestTask -ResourceModuleName $moduleName
